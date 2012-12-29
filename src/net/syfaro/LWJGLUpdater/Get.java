@@ -7,11 +7,11 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
 public class Get {
-    public static boolean Download(String URL, String folder, String name) {
+    public static boolean Download(String url, String savePath) {
         try {
-            URL website = new URL(URL);
+            URL website = new URL(url);
             ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            FileOutputStream fox = new FileOutputStream(new File(folder + "/" + name).getAbsolutePath());
+            FileOutputStream fox = new FileOutputStream(new File(savePath));
             fox.getChannel().transferFrom(rbc, 0, 1 << 24);
             fox.close();
         } catch (Exception e) {
