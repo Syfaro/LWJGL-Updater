@@ -1,127 +1,125 @@
 package net.syfaro.LWJGLUpdater;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
-    
+
+    private static GUI gui;
+
     public static void main(String[] args) {
-        GUI.main();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                gui = new GUI();
+            }
+        });
     }
 
-    public static void load() {
-        GUI.jButton1.setEnabled(false);
-        GUI.status.setText("loading");
-        
-        Folders.workDir = Folders.getWorkingDirectory();
-        
-        ArrayList natives = getNativesDownload(getNatives());
-        ArrayList jars = getJarsDownload(getJars());
-        
-        Object nat[] = natives.toArray();
-        Object jar[] = jars.toArray();
-        
-        if(!new File(Folders.workDir + "/bin/natives").exists()) {
-            new File(Folders.workDir + "/bin/natives").mkdir();
+    public static void load() throws FileNotFoundException {
+        gui.getButton().setEnabled(false);
+        gui.getStatusLabel().setText("Loading");
+
+        File workDir = OS.getWorkingDirectory();
+        workDir.mkdirs();
+        File binFolder = new File(workDir, "bin");
+        File nativesFolder = new File(binFolder, "natives");
+        binFolder.mkdirs();
+        nativesFolder.mkdirs();
+
+        List<Download> files = new ArrayList<Download>();
+        String[] nativeList = getNatives();
+        for (String natives : nativeList) {
+            String link = getNativesDownload(natives);
+            String name = natives;
+            String savePath = new File(nativesFolder, name).getPath();
+            Download newDownload = new Download(name, link, savePath);
+            files.add(newDownload);
         }
-        
-        for(Object n : nat) {
-            String name = n.toString().split("/")[n.toString().split("/").length-1];
-            String folder = Folders.workDir + "/bin/natives";
-            Get.Download(n.toString(), folder, name);
+        String[] jarsList = getJars();
+        for (String jar : jarsList) {
+            String link = getNativesDownload(jar);
+            String name = jar;
+            String savePath = new File(binFolder, name).getPath();
+            Download newDownload = new Download(name, link, savePath);
+            files.add(newDownload);
         }
-        
-        for(Object j : jar) {
-            String name = j.toString().split("/")[j.toString().split("/").length-1];
-            String folder = Folders.workDir + "/bin";
-            Get.Download(j.toString(), folder, name);
+
+        for (Download file : files) {
+            Get.Download(file.url, file.savePath);
         }
-        
-        GUI.status.setText("done");
+
+        gui.getStatusLabel().setText("Done");
     }
-    
+
     public static String[] getJars() {
-        String[] jars = new String[3];
-        
-        jars[0] = "jinput.jar";
-        jars[1] = "lwjgl.jar";
-        jars[2] = "lwjgl_util.jar";
-        
-        return jars;
+        List<String> jars = new ArrayList<String>();
+
+        jars.add("jinput.jar");
+        jars.add("lwjgl.jar");
+        jars.add("lwjgl_util.jar");
+
+        return jars.toArray(new String[0]);
     }
-    
+
     public static String[] getNatives() {
-        String[] natives = null;
-        
-        switch(Folders.getPlatform()) {
+        List<String> natives = new ArrayList<String>();
+
+        switch (OS.getPlatform()) {
             case WINDOWS:
-                natives = new String[8];
-                
-                natives[0] = "jinput-dx8.dll";
-                natives[1] = "jinput-dx8_64.dll";
-                natives[2] = "jinput-raw.dll";
-                natives[3] = "jinput-raw_64.dll";
-                natives[4] = "lwjgl.dll";
-                natives[5] = "lwjgl64.dll";
-                natives[6] = "OpenAL32.dll";
-                natives[7] = "OpenAL64.dll";
-                
+                natives.add("jinput-dx8.dll");
+                natives.add("jinput-dx8_64.dll");
+                natives.add("jinput-raw.dll");
+                natives.add("jinput-raw_64.dll");
+                natives.add("lwjgl.dll");
+                natives.add("lwjgl64.dll");
+                natives.add("OpenAL32.dll");
+                natives.add("OpenAL64.dll");
                 break;
             case LINUX:
-                natives = new String[6];
-                
-                natives[0] = "libjinput-linux.so";
-                natives[1] = "libjinput-linux64.so";
-                natives[2] = "liblwjgl.so";
-                natives[3] = "liblwjgl64.so";
-                natives[4] = "libopenal.so";
-                natives[5] = "libopenal64.so";
-                
+                natives.add("libjinput-linux.so");
+                natives.add("libjinput-linux64.so");
+                natives.add("liblwjgl.so");
+                natives.add("liblwjgl64.so");
+                natives.add("libopenal.so");
+                natives.add("libopenal64.so");
                 break;
             case MACOS:
-                natives = new String[3];
-                
-                natives[0] = "libjinput-osx.jnilib";
-                natives[1] = "liblwjgl.jnilib";
-                natives[2] = "openal.dylib";
-                
+                natives.add("libjinput-osx.jnilib");
+                natives.add("liblwjgl.jnilib");
+                natives.add("openal.dylib");
                 break;
         }
-        
-        return natives;
+
+        return natives.toArray(new String[0]);
     }
-    
+
     public static ArrayList<String> getJarsDownload(String[] jars) {
         ArrayList jar = new ArrayList();
-        
-        for(String s : jars) {
-            jar.add("http://vps.syfaro.net/lwjgl/jar/"+s);
+
+        for (String s : jars) {
+            jar.add("http://vps.syfaro.net/lwjgl/jar/" + s);
         }
-        
+
         return jar;
     }
-    
-    public static ArrayList<String> getNativesDownload(String[] natives) {
-        ArrayList nat = new ArrayList();
-        
-        String platform = null;
-        
-        switch(Folders.getPlatform()) {
-            case WINDOWS:
-                platform = "windows";
-                break;
-            case MACOS:
-                platform = "macosx";
-                break;
-            case LINUX:
-                platform = "linux";
-                break;
+
+    public static String getNativesDownload(String natives) {
+        return "http://vps.syfaro.net/lwjgl/native/" + OS.getPlatform().getName() + "/" + natives;
+    }
+
+    private static class Download {
+
+        String name;
+        String url;
+        String savePath;
+
+        public Download(String aName, String aUrl, String save) {
+            name = aName;
+            url = aUrl;
+            savePath = save;
         }
-        
-        for(String s : natives) {
-            nat.add("http://vps.syfaro.net/lwjgl/native/"+platform+"/"+s);
-        }
-        
-        return nat;
     }
 }
