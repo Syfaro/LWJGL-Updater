@@ -7,13 +7,20 @@ import java.util.List;
 
 public class Main {
 
+    private static GUI gui;
+
     public static void main(String[] args) {
-        GUI.main();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                gui = new GUI();
+            }
+        });
     }
 
     public static void load() throws FileNotFoundException {
-        GUI.jButton1.setEnabled(false);
-        GUI.status.setText("Loading");
+        gui.getButton().setEnabled(false);
+        gui.getStatusLabel().setText("Loading");
 
         File workDir = OS.getWorkingDirectory();
 
@@ -36,7 +43,7 @@ public class Main {
             Get.Download(j.toString(), folder, name);
         }
 
-        GUI.status.setText("done");
+        gui.getStatusLabel().setText("Done");
     }
 
     public static String[] getJars() {
