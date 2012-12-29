@@ -50,44 +50,35 @@ public class Main {
     }
 
     public static String[] getNatives() {
-        String[] natives = null;
+        List<String> natives = new ArrayList<String>();
 
         switch (OS.getPlatform()) {
             case WINDOWS:
-                natives = new String[8];
-
-                natives[0] = "jinput-dx8.dll";
-                natives[1] = "jinput-dx8_64.dll";
-                natives[2] = "jinput-raw.dll";
-                natives[3] = "jinput-raw_64.dll";
-                natives[4] = "lwjgl.dll";
-                natives[5] = "lwjgl64.dll";
-                natives[6] = "OpenAL32.dll";
-                natives[7] = "OpenAL64.dll";
-
+                natives.add("jinput-dx8.dll");
+                natives.add("jinput-dx8_64.dll");
+                natives.add("jinput-raw.dll");
+                natives.add("jinput-raw_64.dll");
+                natives.add("lwjgl.dll");
+                natives.add("lwjgl64.dll");
+                natives.add("OpenAL32.dll");
+                natives.add("OpenAL64.dll");
                 break;
             case LINUX:
-                natives = new String[6];
-
-                natives[0] = "libjinput-linux.so";
-                natives[1] = "libjinput-linux64.so";
-                natives[2] = "liblwjgl.so";
-                natives[3] = "liblwjgl64.so";
-                natives[4] = "libopenal.so";
-                natives[5] = "libopenal64.so";
-
+                natives.add("libjinput-linux.so");
+                natives.add("libjinput-linux64.so");
+                natives.add("liblwjgl.so");
+                natives.add("liblwjgl64.so");
+                natives.add("libopenal.so");
+                natives.add("libopenal64.so");
                 break;
             case MACOS:
-                natives = new String[3];
-
-                natives[0] = "libjinput-osx.jnilib";
-                natives[1] = "liblwjgl.jnilib";
-                natives[2] = "openal.dylib";
-
+                natives.add("libjinput-osx.jnilib");
+                natives.add("liblwjgl.jnilib");
+                natives.add("openal.dylib");
                 break;
         }
 
-        return natives;
+        return natives.toArray(new String[0]);
     }
 
     public static ArrayList<String> getJarsDownload(String[] jars) {
