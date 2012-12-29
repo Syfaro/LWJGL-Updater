@@ -4,6 +4,10 @@
  */
 package net.syfaro.LWJGLUpdater;
 
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Greg
@@ -76,7 +80,11 @@ public class GUI extends javax.swing.JFrame {
         Thread thread = new Thread() {
             @Override
             public void run() {
-                Main.load();
+                try {
+                    Main.load();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         };
         thread.start();
