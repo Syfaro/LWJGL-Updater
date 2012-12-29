@@ -47,13 +47,13 @@ public class Main {
     }
 
     public static String[] getJars() {
-        String[] jars = new String[3];
+        List<String> jars = new ArrayList<String>();
 
-        jars[0] = "jinput.jar";
-        jars[1] = "lwjgl.jar";
-        jars[2] = "lwjgl_util.jar";
+        jars.add("jinput.jar");
+        jars.add("lwjgl.jar");
+        jars.add("lwjgl_util.jar");
 
-        return jars;
+        return jars.toArray(new String[0]);
     }
 
     public static String[] getNatives() {
