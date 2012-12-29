@@ -23,24 +23,32 @@ public class Main {
         gui.getStatusLabel().setText("Loading");
 
         File workDir = OS.getWorkingDirectory();
+        workDir.mkdirs();
+        File binFolder = new File(workDir, "bin");
+        File nativesFolder = new File(binFolder, "natives");
+        binFolder.mkdirs();
+        nativesFolder.mkdirs();
 
-        List<String> natives = getNativesDownload(getNatives());
-        List<String> jars = getJarsDownload(getJars());
-
-        if (!new File(workDir + "/bin/natives").exists()) {
-            new File(workDir + "/bin/natives").mkdir();
+        List<Download> files = new ArrayList<Download>();
+        String[] nativeList = getNatives();
+        for (String natives : nativeList) {
+            String link = getNativesDownload(natives);
+            String name = natives;
+            String savePath = new File(nativesFolder, name).getPath();
+            Download newDownload = new Download(name, link, savePath);
+            files.add(newDownload);
+        }
+        String[] jarsList = getJars();
+        for (String jar : jarsList) {
+            String link = getNativesDownload(jar);
+            String name = jar;
+            String savePath = new File(binFolder, name).getPath();
+            Download newDownload = new Download(name, link, savePath);
+            files.add(newDownload);
         }
 
-        for (String n : natives) {
-            String name = n.split("/")[n.toString().split("/").length - 1];
-            String folder = workDir + "/bin/natives";
-            Get.Download(n.toString(), folder, name);
-        }
-
-        for (String j : jars) {
-            String name = j.split("/")[j.toString().split("/").length - 1];
-            String folder = workDir + "/bin";
-            Get.Download(j.toString(), folder, name);
+        for (Download file : files) {
+            Get.Download(file.url, file.savePath);
         }
 
         gui.getStatusLabel().setText("Done");
@@ -98,15 +106,20 @@ public class Main {
         return jar;
     }
 
-    public static ArrayList<String> getNativesDownload(String[] natives) {
-        ArrayList nat = new ArrayList();
+    public static String getNativesDownload(String natives) {
+        return "http://vps.syfaro.net/lwjgl/native/" + OS.getPlatform().getName() + "/" + natives;
+    }
 
-        String platform = OS.getPlatform().getName();
+    private static class Download {
 
-        for (String s : natives) {
-            nat.add("http://vps.syfaro.net/lwjgl/native/" + platform + "/" + s);
+        String name;
+        String url;
+        String savePath;
+
+        public Download(String aName, String aUrl, String save) {
+            name = aName;
+            url = aUrl;
+            savePath = save;
         }
-
-        return nat;
     }
 }
