@@ -37,14 +37,14 @@ public class GUI extends javax.swing.JFrame {
         label = new javax.swing.JLabel();
         status = new javax.swing.JLabel();
         updateButton = new javax.swing.JButton();
-        progress = new javax.swing.JProgressBar();
+        progressBar = new javax.swing.JProgressBar();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         label.setText("Status:");
 
-        status.setText("idle");
+        status.setText("Idle");
 
         updateButton.setText("Update!");
         updateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -71,9 +71,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(progress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(status)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -83,16 +81,16 @@ public class GUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(progress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(updateButton))
+                    .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(label)
                     .addComponent(status))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -119,11 +117,11 @@ public class GUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel label;
-    private javax.swing.JProgressBar progress;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel status;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
-    
+
     public JLabel getLabel() {
         return label;
     }
@@ -140,7 +138,7 @@ public class GUI extends javax.swing.JFrame {
         status.setText(newText);
     }
     
-    public JProgressBar getStatusBar() {
-        return progress;
+    public JProgressBar getProgressBar() {
+        return progressBar;
     }
 }

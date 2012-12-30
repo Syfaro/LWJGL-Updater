@@ -42,7 +42,7 @@ public class Main {
         
         String[] jarsList = getJars();
         for (String jar : jarsList) {
-            String link = getNativesDownload(jar);
+            String link = getJarsDownload(jar);
             String name = jar;
             String savePath = new File(binFolder, name).getPath();
             Download newDownload = new Download(name, link, savePath);
@@ -50,15 +50,18 @@ public class Main {
         }
         
         int count = 0;
-        gui.getStatusBar().setMaximum(files.size());
-        
+        gui.getProgressBar().setMaximum(files.size());
+        gui.getProgressBar().setStringPainted(true);
+
         for (Download file : files) {
+            gui.getProgressBar().setString("Downloading " + file.name);
             Get.Download(file.url, file.savePath);
             count++;
-            gui.getStatusBar().setValue(count);
+            gui.getProgressBar().setValue(count);
         }
 
         gui.getStatusLabel().setText("Done");
+        gui.getProgressBar().setString("Complete");
     }
 
     public static String[] getJars() {
@@ -103,14 +106,8 @@ public class Main {
         return natives.toArray(new String[0]);
     }
 
-    public static ArrayList<String> getJarsDownload(String[] jars) {
-        ArrayList jar = new ArrayList();
-
-        for (String s : jars) {
-            jar.add("http://vps.syfaro.net/lwjgl/jar/" + s);
-        }
-
-        return jar;
+    public static String getJarsDownload(String jars) {
+        return "http://vps.syfaro.net/lwjgl/jar/" + jars;
     }
 
     public static String getNativesDownload(String natives) {
