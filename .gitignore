@@ -1,9 +1,0 @@
-.gitignore
-.gitattributes
-.git/
-*/build/
-*/dist/
-*/nbproject/
-*/settings/
-*/build.xml
-*/manifest.mf
