@@ -2,6 +2,7 @@ package net.syfaro.LWJGLUpdater;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,14 +20,15 @@ public class Main {
             }
         });
     }
-    
+
     public static void Update(GUI gui) throws FileNotFoundException {
         gui.setStatusLabelText("Checking version");
-        
-        Version v = new Version(OS.getWorkingDirectory());
-        
-        if(v.isUpToDate()) {
+
+        Version v = new Version(OS.getWorkingDirectory(), gui);
+
+        if (v.isUpToDate()) {
             gui.setStatusLabelText("Already updated");
+            gui.getForceUpdate().setVisible(true);
         } else {
             gui.getButton().setEnabled(true);
             gui.setStatusLabelText("Update available!");
@@ -45,7 +47,7 @@ public class Main {
         nativesFolder.mkdirs();
 
         List<Download> files = new ArrayList<Download>();
-        
+
         String[] nativeList = getNatives();
         for (String natives : nativeList) {
             String link = getNativesDownload(natives);
@@ -54,7 +56,7 @@ public class Main {
             Download newDownload = new Download(name, link, savePath);
             files.add(newDownload);
         }
-        
+
         String[] jarsList = getJars();
         for (String jar : jarsList) {
             String link = getJarsDownload(jar);
@@ -63,7 +65,7 @@ public class Main {
             Download newDownload = new Download(name, link, savePath);
             files.add(newDownload);
         }
-        
+
         int count = 0;
         gui.getProgressBar().setMaximum(files.size());
         gui.getProgressBar().setStringPainted(true);
@@ -77,10 +79,16 @@ public class Main {
 
         gui.getStatusLabel().setText("Done");
         gui.getProgressBar().setString("Complete");
-        
-        Version v = new Version(workDir);
-        
+
+        Version v = new Version(workDir, gui);
+
         v.saveNewVersion();
+
+        try {
+            gui.getCurVer().setText(v.getCurrentVersion());
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static String[] getJars() {

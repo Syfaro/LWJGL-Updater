@@ -7,6 +7,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
 public class Get {
+
     public static boolean Download(String url, String savePath) {
         try {
             URL website = new URL(url);

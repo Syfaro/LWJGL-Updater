@@ -9,7 +9,6 @@ public enum OS {
     WINDOWS("windows"),
     MACOS("macosx"),
     UNKNOWN("unknown");
-
     private String name;
 
     private OS(String aN) {
