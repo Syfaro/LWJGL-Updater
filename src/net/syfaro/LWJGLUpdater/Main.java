@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
 
@@ -16,6 +18,19 @@ public class Main {
                 gui = new GUI();
             }
         });
+    }
+    
+    public static void Update(GUI gui) throws FileNotFoundException {
+        gui.setStatusLabelText("Checking version");
+        
+        Version v = new Version(OS.getWorkingDirectory());
+        
+        if(v.isUpToDate()) {
+            gui.setStatusLabelText("Already updated");
+        } else {
+            gui.getButton().setEnabled(true);
+            gui.setStatusLabelText("Update available!");
+        }
     }
 
     public static void load() throws FileNotFoundException {
@@ -62,6 +77,10 @@ public class Main {
 
         gui.getStatusLabel().setText("Done");
         gui.getProgressBar().setString("Complete");
+        
+        Version v = new Version(workDir);
+        
+        v.saveNewVersion();
     }
 
     public static String[] getJars() {
