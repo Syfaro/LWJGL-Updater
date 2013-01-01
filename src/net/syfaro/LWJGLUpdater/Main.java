@@ -22,7 +22,7 @@ public class Main {
     }
 
     public static void Update(GUI gui) throws FileNotFoundException {
-        gui.setStatusLabelText("Checking version");
+        gui.setStatusLabelText("Getting newest version...");
 
         Version v = new Version(OS.getWorkingDirectory(), gui);
 
