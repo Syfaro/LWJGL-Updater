@@ -54,11 +54,15 @@ public class UpdaterFunctions {
         File oldF = new File(oldFile);
         File newF = new File(newFile);
 
+        if(newF.exists()) newF.delete();
+
         try {
             oldF.renameTo(newF);
         } catch (Exception ex) {
             return false;
         }
+
+        System.out.println(oldFile + " -> " + newFile);
 
         return true;
     }
@@ -66,6 +70,8 @@ public class UpdaterFunctions {
     public static boolean CopyFile(String file, String newFile) throws IOException {
         FileChannel source = null;
         FileChannel dest = null;
+
+        if(new File(newFile).exists()) new File(newFile).delete();
 
         try {
             source = new FileInputStream(new File(file)).getChannel();
@@ -83,10 +89,14 @@ public class UpdaterFunctions {
             }
         }
 
+        System.out.println(file + " <-> " + newFile);
+
         return true;
     }
 
     public static boolean DeleteFile(String file) {
+        if(!new File(file).exists()) return true;
+
         try {
             new File(file).delete();
         } catch (Exception ex) {
@@ -94,6 +104,8 @@ public class UpdaterFunctions {
             return false;
         }
 
-        return false;
+        System.out.println(file + " is dead now");
+
+        return true;
     }
 }

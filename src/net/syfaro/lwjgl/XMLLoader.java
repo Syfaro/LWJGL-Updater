@@ -181,8 +181,6 @@ public class XMLLoader {
         ret.put("move", filesToMove);
         ret.put("delete", filesToDelete);
 
-        System.out.println(ret);
-
         return ret;
     }
 }
