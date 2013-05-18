@@ -1,9 +1,5 @@
 package net.syfaro.lwjgl;
 
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.util.*;
 
 public class Main {
@@ -23,7 +19,6 @@ public class Main {
         try {
             information = XMLLoader.loadInformation();
         } catch (Exception ex) {
-            ex.printStackTrace();
             System.exit(1);
         }
         
@@ -45,7 +40,7 @@ public class Main {
     }
 
     public static void getXml() {
-        Download.DownloadFile(downloadLocation + "lwjgl_version.xml", "http://lwjgl.syfaro.net/lwjgl_version.xml");
+        UpdaterFunctions.DownloadFile(downloadLocation + "lwjgl_version.xml", "http://lwjgl.syfaro.net/lwjgl_version_v2.xml");
     }
 
     public static boolean currentOperatingSystem(String wanted) {

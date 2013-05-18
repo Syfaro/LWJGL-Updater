@@ -7,7 +7,6 @@ package net.syfaro.lwjgl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -172,9 +171,16 @@ public class UI extends javax.swing.JFrame {
                 jButton1.setEnabled(false);
                 
                 String selectedVersion = (String) jList1.getSelectedValue();
-                HashMap downloads = null;
+                HashMap downloads;
+                HashMap delete;
+                HashMap rename;
+                HashMap move;
                 try {
-                    downloads = XMLLoader.loadFileList(selectedVersion);
+                    HashMap<String, HashMap> functions = XMLLoader.loadActions(selectedVersion);
+                    downloads = functions.get("download");
+                    delete = functions.get("delete");
+                    rename = functions.get("copy");
+                    move = functions.get("move");
                 } catch (ParserConfigurationException ex) {
                     Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
                     return;
@@ -186,7 +192,7 @@ public class UI extends javax.swing.JFrame {
                     return;
                 }
 
-                jProgressBar1.setMaximum(downloads.size());
+                jProgressBar1.setMaximum(downloads.size()+delete.size()+rename.size()+move.size());
                 jProgressBar1.setValue(0);
 
                 Iterator it = downloads.entrySet().iterator();
@@ -196,7 +202,41 @@ public class UI extends javax.swing.JFrame {
                     String value = (String) pairs.getValue();
                     jProgressBar1.setValue(jProgressBar1.getValue()+1);
                     jLabel2.setText("Downloading " + key);
-                    Download.DownloadFile(Main.downloadLocation + key, value);
+                    UpdaterFunctions.DownloadFile(Main.downloadLocation + key, value);
+                }
+
+                it = rename.entrySet().iterator();
+                while(it.hasNext()) {
+                    Map.Entry pairs = (Map.Entry) it.next();
+                    String key = (String) pairs.getKey();
+                    String value = (String) pairs.getValue();
+                    jProgressBar1.setValue(jProgressBar1.getValue()+1);
+                    jLabel2.setText("Renaming " + key);
+                    try {
+                        UpdaterFunctions.CopyFile(Main.downloadLocation + key, value);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+                }
+
+                it = move.entrySet().iterator();
+                while(it.hasNext()) {
+                    Map.Entry pairs = (Map.Entry) it.next();
+                    String key = (String) pairs.getKey();
+                    String value = (String) pairs.getValue();
+                    jProgressBar1.setValue(jProgressBar1.getValue()+1);
+                    jLabel2.setText("Moving " + key);
+                    UpdaterFunctions.MoveFile(Main.downloadLocation + key, value);
+                }
+
+                it = delete.entrySet().iterator();
+                while(it.hasNext()) {
+                    Map.Entry pairs = (Map.Entry) it.next();
+                    String key = (String) pairs.getKey();
+                    jProgressBar1.setValue(jProgressBar1.getValue()+1);
+                    jLabel2.setText("Deleting " + key);
+                    UpdaterFunctions.DeleteFile(Main.downloadLocation + key);
                 }
                 
                 jLabel2.setText("Finished!");
